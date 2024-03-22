@@ -1,47 +1,250 @@
 ---
-title: "Lab_2_Solution"
+title: "Laboratorio-2-final"
+author: "Juan"
+date: "2024-03-21"
 output: html_document
-date: "2024-02-29"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+# Bloque 1
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+------------------------------------------------------------------------
 
-```{r cars}
-summary(cars)
-```
+## Problema 1
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-## Bloque 1
-
-### Problema 1
 ```{r}
-library(readr)
-credit_card<-read.csv('C:/Users/PC/OneDrive - Universidad EAFIT/Semestre 5/Stastistics/Lab 2/tarjetacredit.csv')
-View(credit_card)
+datos <- read.csv("C:/Users/juane/OneDrive/Documentos/Universidad/Semestre-5/Estadistica/Laboratorio-2/tarjetacredit.csv")
 ```
 
-## Bloque 2
 
+```{r}
+install.packages("flextable")
+install.packages("gglpot2")
+install.packages("kableExtra")
+install.packages("tidyr")
+```
+
+
+### a
+
+```{r}
+probabilidad_marginal_genero <- table(datos$Gender) / length(datos$Gender)
+
+probabilidad_marginal_tarjeta <- table(datos$Card_Category) / length(datos$Card_Category)
+
+tabla_conjunta_genero_tarjeta <- table(datos$Gender, datos$Card_Category)
+total_observaciones <- sum(tabla_conjunta_genero_tarjeta)
+probabilidad_conjunta_genero_tarjeta <- tabla_conjunta_genero_tarjeta / total_observaciones
+
+print(probabilidad_marginal_genero)
+print(probabilidad_marginal_tarjeta)
+print(probabilidad_conjunta_genero_tarjeta)
+
+# Graficos 
+colores_genero <- c("blue", "purple")
+barplot(probabilidad_marginal_genero, main = "Probabilidad marginal por genero", xlab = "Genero", ylab = "Probabilidad")
+barplot(probabilidad_marginal_tarjeta, main = "Probabilidad marginal por tipo de tarjeta", xlab = "Tipo de Tarjeta", ylab = "Probabilidad")
+barplot(probabilidad_conjunta_genero_tarjeta, 
+        beside = TRUE, 
+        main = "Probabilidad Conjunta de Género y Tipo de Tarjeta", 
+        xlab = "Combinación (Género-Tipo de Tarjeta)", 
+        ylab = "Probabilidad",
+        col = colores_genero,
+        legend = rownames(probabilidad_conjunta_genero_tarjeta))
+
+```
+-   Los datos muestran que alrededor del 52.9% de los titulares de tarjetas de crédito son mujeres, mientras que aproximadamente el 47.1% son hombres.
+
+-   La tarjeta "Blue" es la más popular entre los titulares, representando aproximadamente el 93.2% de las tarjetas en circulación, seguida de "Silver" con alrededor del 5.5%. Las tarjetas "Gold" y "Platinum" son menos comunes, con alrededor del 1.1% y 0.2% respectivamente.
+
+-   Al observar la probabilidad conjunta de género y tipo de tarjeta, se notan algunas diferencias en las preferencias entre hombres y mujeres. Por ejemplo, las mujeres muestran una mayor propensión a poseer tarjetas "Blue" en comparación con los hombres (aproximadamente 50.4% contra 42.8%).
+
+### b
+
+```{r}
+
+probabilidad_marginal_actividad <- table(datos$Attrition_Flag) / length(datos$Attrition_Flag)
+
+probabilidad_marginal_estado_civil <- table(datos$Marital_Status) / length(datos$Marital_Status)
+
+tabla_conjunta_actividad_estado_civil <- table(datos$Attrition_Flag, datos$Marital_Status)
+probabilidad_conjunta_actividad_estado_civil <- tabla_conjunta_actividad_estado_civil / length(datos$Attrition_Flag)
+
+
+print(probabilidad_marginal_actividad)
+print(probabilidad_marginal_estado_civil)
+print(probabilidad_conjunta_actividad_estado_civil)
+
+#Graficos'
+barplot(probabilidad_marginal_actividad, main = "Probabilidad Marginal de Actividad de la Cuenta", xlab = "Actividad de la Cuenta", ylab = "Probabilidad")
+barplot(probabilidad_marginal_estado_civil, main = "Probabilidad Marginal de Estado Civil", xlab = "Estado Civil", ylab = "Probabilidad")
+
+colores_actividad <- c("blue", "red")
+barplot(as.matrix(probabilidad_conjunta_actividad_estado_civil), beside = TRUE, 
+        main = "Probabilidad Conjunta de Actividad de la Cuenta y Estado Civil", 
+        xlab = "Combinación (Actividad de la Cuenta - Estado Civil)", 
+        ylab = "Probabilidad",
+        col = colores_actividad,
+        legend = rownames(probabilidad_conjunta_actividad_estado_civil))
+```
+
+-   Aproximadamente el 16.1% de los clientes han cerrado su cuenta (Attrited Customer), mientras que el 83.9% tienen cuentas existentes (Existing Customer). Esto sugiere que la mayoría de los clientes mantienen una relación continua con el banco.
+
+-   Se observa que los clientes divorciados tienen una tasa más alta de cierre de cuentas en comparación con los casados, solteros o aquellos con estado civil desconocido. Por ejemplo, el 7.4% de los clientes divorciados han cerrado sus cuentas, mientras que solo el 3.7% de los clientes casados lo han hecho.
+
+-   La mayoría de los clientes tienen un estado civil de casado, seguido de soltero y divorciado. Solo una pequeña proporción tiene un estado civil desconocido. Esto indica que el banco atiende a una amplia gama de clientes con diferentes estados civiles.
+
+### c
+
+
+```{r}
+probc <- data.frame(Tipo_de_tarjeta = datos$Card_Category, Perfil_educativo = datos$Education_Level)
+
+tabla1c <- table(probc)
+round(addmargins(tabla1c))
+round(tabla2c <- prop.table(tabla1c),2)
+round(addmargins(tabla2c))
+
+ggplot(probc, aes(x = Tipo_de_tarjeta, fill = Perfil_educativo)) +
+  geom_bar(position = "stack") +
+  labs(x = "Tipo de Tarjeta", y = "Frecuencias", fill = "Perfil Educativo") +
+  ggtitle("Diagrama de barras de Tipo de Tarjeta por Perfil Educativo") +
+  theme_bw(base_size = 12)
+
+ggplot(probc, aes(x = Tipo_de_tarjeta, fill = Perfil_educativo)) +
+  geom_bar(position = "dodge", colour = "black") +
+  labs(x = "Tipo de Tarjeta", y = "Frecuencias", fill = "Perfil Educativo") +
+  ggtitle("Diagrama de barras agrupadas de Tipo de Tarjeta por Perfil Educativo") +
+  theme_bw(base_size = 12)
+
+```
+
+### Conclusiones del punto C:
+
+1. Se ha identificado que la tarjeta de color azul goza de una aceptación considerable a través de un espectro amplio de niveles educativos, evidenciando una participación notable de individuos cuya formación académica varía desde la educación secundaria hasta niveles de posgrado.
+
+2. Se observa una tendencia menor hacia la posesión de tarjetas de crédito entre individuos con formación académica avanzada, tales como los poseedores de títulos de posgrado o doctorado. Estos grupos demuestran una probabilidad significativamente reducida de asociación con cualquier tipo de tarjeta de crédito.
+
+3. La representación disminuida en las categorías de tarjetas doradas, platino y plata sugiere la existencia de una relación entre el nivel educativo de los individuos y su acceso o preferencia por tarjetas de crédito de categoría superior, las cuales ofrecen mayores beneficios y, consecuentemente, incurren en costos más elevados.
+
+
+# d. actividad del cliente con respecto a la cuenta (activa o cerrada) y el género (F  ́o M).
+```{r}
+probd<-data.frame(Estado_tarjeta=datos$Attrition_Flag, Género=datos$Gender)
+library(ggplot2)
+(tabla1d<-table(probd))
+round(addmargins(tabla1d))
+round(tabla2d <- prop.table(tabla1d),2)
+round(addmargins(tabla2d),2)
+
+ggplot(probd, aes(Estado_tarjeta, fill=Género ))+
+  geom_bar()+
+  labs(x= "Actividad de la tarjeta", y="Frecuencias", fill="Género")+
+  ylim(c(0,8500))+
+  #xlim(c(0,300))+
+  ggtitle("Diagrama de barras de Actividad del Cliente y el Género")+
+  theme_bw(base_size = 12)
+
+ggplot(probd, aes(Estado_tarjeta, fill=Género))+
+  geom_bar(position="dodge", colour="black")+
+  labs(x = "Actividad de la tarjeta", y = "Frecuencias", fill="Género")+
+  ylim(0,4500)+
+  ggtitle("Diagrama de barras agrupadas de Actividad del Cliente y el Género")
+
+```
+
+### Conclusiones punto D:
+
+1. Distribución Equitativa de la Tarjeta Azul: La composición demográfica de los titulares de la Tarjeta Azul demuestra un balance proporcional entre géneros dentro de la clientela actual, con una representación femenina del 44% y una masculina del 40%, lo cual evidencia una asignación equitativa de los productos bancarios entre mujeres y hombres.
+
+2. Preponderancia Femenina en la Clientela General: El análisis de la totalidad de clientes revela que las mujeres constituyen el 53% del conjunto, en comparación con el 47% de representación masculina, sugiriendo una predominancia femenina en la base de clientes del banco en su totalidad.
+
+3. Correlación Potencial entre Género y Actividad de Cuentas: Se postula la existencia de una posible correlación entre la mayor presencia de clientas femeninas en comparación con los clientes masculinos y el hecho de que las mujeres no solo predominan en el número total de cuentas, sino también lideran tanto en las categorías de cuentas activas como inactivas. Esta circunstancia podría ser atribuida a otros factores subyacentes aún no identificados.
+
+
+## Problema 2.
+
+---
+
+Teniendo en cuenta la información de la tabla d. realizada en el punto anterior, complete:
+
+El gerente del banco recolectó datos sobre 10127 de sus clientes. De los 4769 hombres, 4072 tienen tarjetas de crédito activas  697  de los hombres tienen la cuenta cerrada (inactiva), mientras que 930 de las mujeres tienen la cuenta inactiva. El gerente del banco desea determinar la probabilidad de que un cliente seleccionado al azar sea:
+
+# * Una mujer con tarjeta de crédito (cuenta) activa.
+R// la Probabilidad es de 44%
+
+
+# * Una mujer con tarjeta de crédito inactiva.
+R// La probabilidad es de 9%
+
+
+# * Un hombre sin tarjeta activa.
+R// La probabilidad es de 7%
+
+
+# * Un hombre con tarjeta activa.
+R// La probabilidad es de 40%
+
+Conclusión: Mediante el empleo de tablas de frecuencias cruzadas, así como de tablas que ilustran probabilidades conjuntas y condicionales, es factible brindar claridad sobre las diversas probabilidades de seleccionar aleatoriamente a un individuo cuyas características distintivas incluyen el género —ya sea femenino o masculino— y la posesión de determinados atributos, tales como actividad bancaria actual, nivel de cualificación profesional, estado civil o la tenencia de variados tipos de tarjetas de crédito dentro de los segmentos más vigorosos del mercado de crédito. 
+
+
+# Bloque 2
+
+---
+
+### problema 3
+
+```{r}
+
+datos$Grupo_Edad<-ifelse(datos$Customer_Age<40, "Menos de 40 años","40 años o más")
+(table_3a<-table(datos$Card_Category, datos$Grupo_Edad))
+(table_3a<-addmargins(table_3a))
+total<-table_3a[5,3];total
+```
+
+-   Probabilidad de tener 40 años o más y tarjeta de crédito azul
+
+```{r}
+p_1<-table_3a[1]/total;p_1
+```
+
+-   Probabilidad de tener menos de 40 años
+
+```{r}
+p_2<-table_3a[5,2]/total;p_2
+```
+
+-   Probabilidad de tener tarjeta de crédito plata dado que tiene 40 años o más
+
+```{r}
+p_3<-table_3a[4]/table_3a[5];p_3
+```
+
+-   Probabilidad de ser menor de 40 años si tiene tarjeta tipo oro
+
+```{r}
+p_4<-table_3a[2,2]/table_3a[2,3];p_4
+```
+
+-   Probabilidad de tener tarjeta oro o azul dado que es una persona menor de 40 años
+
+```{r}
+p_5<-(table_3a[2,2]+table_3a[1,2])/table_3a[5,2];p_5
+```
+
+-   Probabilidad de no tener tarjeta platino dado que es una persona de 40 años o más
+
+```{r}
+p_6<-1-table_3a[3,1]/table_3a[5,1];p_6<-p_6;p_6
+```
 ### Problema 4
+
 ``` {r}
-table_4a<-table(credit_card$Marital_Status,credit_card$Income_Category)
+table_4a<-table(datos$Marital_Status,datos$Income_Category)
 table_4b<-addmargins(table_4a)
 frequencies_table<-matrix(nrow=nrow(table_4a),ncol=ncol(table_4a))
 row.names(frequencies_table)<-row.names(table_4a)
@@ -53,6 +256,8 @@ for (i in 1:nrow(table_4a)){
 frequencies_table
 
 ```
+
+
 ``` {r}
 
 divorced<-barplot(frequencies_table[1,])
@@ -64,10 +269,12 @@ unknown<-barplot(frequencies_table[4,])
 
 Como puede verse en los gráficos, y más claramente en la tabla "frequencies_table", los salarios de más de 120K son más tendientes a ser de los casados, los que son entre 80-120 de los "unknown", o en su defecto de los casados, los que están entre 80-60k alos divorciados, los que están entre 60-40k a los divorciados, y los que están por debajo de 40 a los solteros, a groso modo se podría decir que los solteros tienden a tener un salario más bajo, pero debido a que las cifras no son demasiado significativas entre un grupo y otro podría pensarse que la situación marital no tiene mucho que ver con la situación financiera, aún así los casados son quienes tienden a tener mejores salarios, luego van los divorciados y por último los solteros.
 
+
 ### Problema 5
 
+
 ``` {r}
-tabla_contingencia <- table(credit_card$Education_Level, credit_card$Income_Category)
+tabla_contingencia <- table(datos$Education_Level, datos$Income_Category)
 print("Tabla de Contingencia:")
 table_5<-addmargins(tabla_contingencia)
 
@@ -87,8 +294,7 @@ print(paste("Dado que es de escuela secundaria, no tenga ingresos entre $80.000 
 prob_secundaria_dado_ingresos_menos_120K <- table_5["High School",1] / table_5["Sum",1]
 print(paste("Probabilidad de que un cliente con ingresos inferiores a $120,000 provenga de la escuela secundaria:", round(prob_secundaria_dado_ingresos_menos_120K*100,2),"%"))
 ```
-
-## Bloque 2
+## Bloque 3
 
 ### Problema 6
 
@@ -146,4 +352,42 @@ P(B2|C) = \frac{P(C|B2) \cdot P(B2)}{P(C)} \\
 
 $$
 
+### Problema 8
 
+$$
+P(S) = 0.07 \quad (\text{Probabilidad de tener estudios superiores}) \\
+P(M) = 0.20 \quad (\text{Probabilidad de tener estudios medios}) \\
+P(P) = 0.60 \quad (\text{Probabilidad de tener estudios primarios}) \\
+P(N) = 0.13 \quad (\text{Probabilidad de no tener estudios}) \\
+P(D|S) = 0.10 \quad (\text{Probabilidad de estar desempleado dado que tiene estudios superiores}) \\
+P(D|M) = 0.35 \quad (\text{Probabilidad de estar desempleado dado que tiene estudios medios}) \\
+P(D|P) = 0.18 \quad (\text{Probabilidad de estar desempleado dado que tiene estudios primarios}) \\
+P(D|N) = 0.37 \quad (\text{Probabilidad de estar desempleado dado que no tiene estudios}) \\
+
+La \ probabilidad \ de \ que \ un \ individuo \ esté \ desempleado \  P(D) \  será: \\ 
+
+P(D) = P(D|S) \cdot P(S) + P(D|M) \cdot P(M) + P(D|P) \cdot P(P) + P(D|N) \cdot P(N)  \\
+
+Sustituyendo \ los \ valores, \ obtenemos: \\
+
+P(D) = (0.10 \times 0.07) + (0.35 \times 0.20) + (0.18 \times 0.60) + (0.37 \times 0.13) \\
+P(D) = 0.007 + 0.07 + 0.108 + 0.0481  \\
+P(D) = 0.2331  \\
+
+Por lo tanto, la probabilidad de que un individuo extraído al azar esté desempleado es aproximadamente \ (23.31\% \ ). \\
+
+
+Usando la fórmula de probabilidad condicional: \\
+
+P(S|D) = \frac{P(D|S) \cdot P(S)}{P(D)} \\
+
+Sustituyendo \ los \ valores \ que \ conocemos: \\
+
+P(S|D) = \frac{0.10 \times 0.07}{0.2331} \\
+P(S|D) = \frac{0.007}{0.2331}  \\
+P(S|D) \approx 0.030  \\
+
+Por lo tanto, la probabilidad de que un individuo sea titulado superior, sabiendo que está desempleado, es aproximadamente \ (3.0\% \ ). \\
+ 
+
+$$
