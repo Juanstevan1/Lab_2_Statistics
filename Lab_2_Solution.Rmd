@@ -37,5 +37,113 @@ credit_card<-read.csv('C:/Users/PC/OneDrive - Universidad EAFIT/Semestre 5/Stast
 View(credit_card)
 ```
 
+## Bloque 2
+
+### Problema 4
+``` {r}
+table_4a<-table(credit_card$Marital_Status,credit_card$Income_Category)
+table_4b<-addmargins(table_4a)
+frequencies_table<-matrix(nrow=nrow(table_4a),ncol=ncol(table_4a))
+row.names(frequencies_table)<-row.names(table_4a)
+colnames(frequencies_table)<-colnames(table_4a)
+for (i in 1:nrow(table_4a)){
+  frequencies_table[i,]<-round(table_4a[i,]*100/table_4b[i,7],digits=2)
+}
+
+frequencies_table
+
+```
+``` {r}
+
+divorced<-barplot(frequencies_table[1,])
+married<-barplot(frequencies_table[2,])
+single<-barplot(frequencies_table[3,])
+unknown<-barplot(frequencies_table[4,])
+
+```
+
+Como puede verse en los gráficos, y más claramente en la tabla "frequencies_table", los salarios de más de 120K son más tendientes a ser de los casados, los que son entre 80-120 de los "unknown", o en su defecto de los casados, los que están entre 80-60k alos divorciados, los que están entre 60-40k a los divorciados, y los que están por debajo de 40 a los solteros, a groso modo se podría decir que los solteros tienden a tener un salario más bajo, pero debido a que las cifras no son demasiado significativas entre un grupo y otro podría pensarse que la situación marital no tiene mucho que ver con la situación financiera, aún así los casados son quienes tienden a tener mejores salarios, luego van los divorciados y por último los solteros.
+
+### Problema 5
+
+``` {r}
+tabla_contingencia <- table(credit_card$Education_Level, credit_card$Income_Category)
+print("Tabla de Contingencia:")
+table_5<-addmargins(tabla_contingencia)
+
+# Tenga posgrado.
+prob_posgrado <- table_5["Post-Graduate","Sum" ] / table_5["Sum","Sum"]
+print(paste("Probabilidad de tener posgrado:", round(prob_posgrado * 100, 2),"%"))
+# Tenga ingresos entre $60K-$80K dado que es graduado universitario.
+prob_ingresos_60K_80K_dado_universitario <-(tabla_contingencia["Graduate", "$60K - $80K"]) / (table_5["Graduate", "Sum"])
+print(paste("Probabilidad de tener ingresos entre $60K - $80K dado que es graduado universitario:", round(prob_ingresos_60K_80K_dado_universitario*100,2),"%"))
+# Sea doctor si tiene de ingresos mas de $ 120K.
+prob_ingresos_120Kplus_dado_doctor <- (tabla_contingencia["Doctorate","$120K +"]) / sum(table_5["Doctorate","Sum"])
+print(paste("Probabilidad de que sea doctor si tiene de ingreso mas de $120K: ", round(prob_ingresos_120Kplus_dado_doctor*100,2),"%"))
+#Dado que es de escuela secundaria, no tenga ingresos entre $80.000 y $ 120.000 dolares.
+prob_no_ingresos_80K_120K_dado_secundaria <- 1- tabla_contingencia[4,4] / (table_5["High School", "Sum"])
+print(paste("Dado que es de escuela secundaria, no tenga ingresos entre $80.000 y $ 120.000 dolares: ", round(prob_no_ingresos_80K_120K_dado_secundaria*100,2),"%"))
+#Si se sabe que el cliente tiene menos de 120.000 dolares de ingresos anuales, provenga de un cliente con escuela secundaria.
+prob_secundaria_dado_ingresos_menos_120K <- table_5["High School",1] / table_5["Sum",1]
+print(paste("Probabilidad de que un cliente con ingresos inferiores a $120,000 provenga de la escuela secundaria:", round(prob_secundaria_dado_ingresos_menos_120K*100,2),"%"))
+```
+
+## Bloque 2
+
+### Problema 6
+
+
+$$
+
+P(H) = 0.15 \ (Estudiantes \ hombres) \\
+P(M) = 1 - P(H) = 0.85 \ (Estudiantes \ mujeres) \\
+P(F|H) = 0.70 \ (Probabilidad \ hombre \ fumador) \\
+P(F|M) = 0.20 \ (Probabilidad \ mujer \ fumer) \\
+
+P(F) = P(F|H) \cdot P(H) + P(F|M) \cdot P(M) \ (Probilidad \ de \ que \ alguien \ fume ) \\
+
+P(A) = \sum_{i=1}^{n} P(A|B_i) \cdot P(B_i) \\ 
+
+La \ probabilidad \ de \ que \ una \ persona \ fume \ es \  de \
+
+P(F) = 0.70 \cdot 0.15 + 0.20 \cdot 0.85 = 27.5 \% \\ 
+
+$$
+
+
+### Problema 7
+
+
+$$
+
+P(B1) = 0.60 \quad (\text{Probabilidad de recibir un producto de B1}) \\
+P(B2) = 0.25 \quad (\text{Probabilidad de recibir un producto de B2}) \\
+P(B3) = 0.15 \quad (\text{Probabilidad de recibir un producto de B3}) \\
+P(C|B1) = 0.90 \quad (\text{Probabilidad de que un producto de B1 cumpla con las especificaciones}) \\
+P(C|B2) = 0.85 \quad (\text{Probabilidad de que un producto de B2 cumpla con las especificaciones}) \\
+P(C|B3) = 0.60 \quad (\text{Probabilidad de que un producto de B3 cumpla con las especificaciones}) \\ 
+
+Para \ calcular \ la \ probabilidad \ de \ que \ algún \ producto \ recibido \ cumpla \ con \ las  \ especificaciones \ ( \ (P(C) \ )): \\
+
+P(C) = \sum_{i=1}^{n} P(C|B_i) \cdot P(B_i) \\ 
+
+
+P(C) = P(C|B1) \cdot P(B1) + P(C|B2) \cdot P(B2) + P(C|B3) \cdot P(B3) \\
+= (0.90 \times 0.60) + (0.85 \times 0.25) + (0.60 \times 0.15) \\
+= 0.54 + 0.2125 + 0.09 \\
+= 0.8425 \\
+
+Por \ lo \ tanto, \ por \ Bayes: \\
+
+
+P(B2|C) = \frac{P(C|B2) \cdot P(B2)}{P(C)} \\
+= \frac{0.85 \times 0.25}{0.8425} \\
+= \frac{0.2125}{0.8425} \\
+\approx 0.2522
+= 25.22 \%
+
+
+
+$$
 
 
