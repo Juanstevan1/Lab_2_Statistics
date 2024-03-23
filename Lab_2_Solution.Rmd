@@ -158,6 +158,43 @@ P(B2|C) = \frac{P(C|B2) \cdot P(B2)}{P(C)} \\
 = 25.22 \%
 
 
+### Problema 8
+
+$$
+P(S) = 0.07 \quad (\text{Probabilidad de tener estudios superiores}) \\
+P(M) = 0.20 \quad (\text{Probabilidad de tener estudios medios}) \\
+P(P) = 0.60 \quad (\text{Probabilidad de tener estudios primarios}) \\
+P(N) = 0.13 \quad (\text{Probabilidad de no tener estudios}) \\
+P(D|S) = 0.10 \quad (\text{Probabilidad de estar desempleado dado que tiene estudios superiores}) \\
+P(D|M) = 0.35 \quad (\text{Probabilidad de estar desempleado dado que tiene estudios medios}) \\
+P(D|P) = 0.18 \quad (\text{Probabilidad de estar desempleado dado que tiene estudios primarios}) \\
+P(D|N) = 0.37 \quad (\text{Probabilidad de estar desempleado dado que no tiene estudios}) \\
+
+La \ probabilidad \ de \ que \ un \ individuo \ esté \ desempleado \  P(D) \  será: \\ 
+
+P(D) = P(D|S) \cdot P(S) + P(D|M) \cdot P(M) + P(D|P) \cdot P(P) + P(D|N) \cdot P(N)  \\
+
+Sustituyendo \ los \ valores, \ obtenemos: \\
+
+P(D) = (0.10 \times 0.07) + (0.35 \times 0.20) + (0.18 \times 0.60) + (0.37 \times 0.13) \\
+P(D) = 0.007 + 0.07 + 0.108 + 0.0481  \\
+P(D) = 0.2331  \\
+
+Por lo tanto, la probabilidad de que un individuo extraído al azar esté desempleado es aproximadamente \ (23.31\% \ ). \\
+
+
+Usando la fórmula de probabilidad condicional: \\
+
+P(S|D) = \frac{P(D|S) \cdot P(S)}{P(D)} \\
+
+Sustituyendo \ los \ valores \ que \ conocemos: \\
+
+P(S|D) = \frac{0.10 \times 0.07}{0.2331} \\
+P(S|D) = \frac{0.007}{0.2331}  \\
+P(S|D) \approx 0.030  \\
+
+Por lo tanto, la probabilidad de que un individuo sea titulado superior, sabiendo que está desempleado, es aproximadamente \ (3.0\% \ ). \\
+ 
 
 $$
 
