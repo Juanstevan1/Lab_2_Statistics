@@ -30,6 +30,21 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 
 ## Bloque 1
 
+### Ejecutar antes del punto 1
+```{r}
+install.packages("flextable")
+install.packages("gglpot2")
+install.packages("kableExtra")
+install.packages("tidyr")
+install.packages("ggplot2")
+library(flextable)
+library(dplyr)
+library(ggplot2)
+library(knitr)
+library(kableExtra)
+library(tidyr)
+```
+
 ### Problema 1
 ```{r}
 library(readr)
